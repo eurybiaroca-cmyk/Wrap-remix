@@ -9,25 +9,16 @@
   <h2>🔒 Wrap Remix Admin</h2>
 
   <button id="loginBtn">Login with Google</button>
-  <button id="logoutBtn" style="display:none;">Logout</button>
-
   <p id="msg"></p>
 
   <div id="adminPanel" style="display:none;">
     <h3>📦 Orders Panel</h3>
-    <p>Welcome, admin! Only you can see this page.</p>
-    <p>(Next step: we will show orders here.)</p>
+    <p>Welcome, admin!</p>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { 
-      getAuth, 
-      GoogleAuthProvider, 
-      signInWithPopup, 
-      signOut, 
-      onAuthStateChanged 
-    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBu_pA3COAms7S3sjOJnpZC943SL2iu0TM",
@@ -42,29 +33,24 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    const ADMIN_EMAIL = "drnelsb@gmail.com"; // 👈 ONLY THIS EMAIL IS ALLOWED
+    const ADMIN_EMAIL = "drnelsb@gmail.com";
 
-    const loginBtn = document.getElementById("loginBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const msg = document.getElementById("msg");
-    const adminPanel = document.getElementById("adminPanel");
-
-    loginBtn.onclick = () => {
+    document.getElementById("loginBtn").onclick = () => {
       signInWithPopup(auth, provider).catch(err => {
-        msg.textContent = "❌ Login failed: " + err.message;
+        document.getElementById("msg").textContent = "❌ " + err.message;
       });
-    };
-
-    logoutBtn.onclick = () => {
-      signOut(auth);
     };
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
         if (user.email === ADMIN_EMAIL) {
-          msg.textContent = "✅ Welcome, Admin!";
-          adminPanel.style.display = "block";
-          loginBtn.style.display = "none";
-          logoutBtn.style.display = "inline-block";
+          document.getElementById("msg").textContent = "✅ Welcome, Admin!";
+          document.getElementById("adminPanel").style.display = "block";
         } else {
-          msg.textContent = "❌ Not authorized. This page is
+          document.getElementById("msg").textContent = "❌ Not authorized.";
+        }
+      }
+    });
+  </script>
+</body>
+</html>
