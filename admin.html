@@ -3,24 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <title>Wrap Remix Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-  <h2>🔒 Admin Login</h2>
+  <h2>🔒 Wrap Remix Admin</h2>
 
-  <input id="email" placeholder="Admin Email"><br><br>
-  <input id="password" type="password" placeholder="Password"><br><br>
-  <button onclick="login()">Login</button>
+  <button id="loginBtn">Login with Google</button>
+  <button id="logoutBtn" style="display:none;">Logout</button>
 
   <p id="msg"></p>
 
   <div id="adminPanel" style="display:none;">
     <h3>📦 Orders Panel</h3>
-    <p>Welcome, admin! (Orders will appear here later)</p>
+    <p>Welcome, admin! Only you can see this page.</p>
+    <p>(Next step: we will show orders here.)</p>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { 
+      getAuth, 
+      GoogleAuthProvider, 
+      signInWithPopup, 
+      signOut, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBu_pA3COAms7S3sjOJnpZC943SL2iu0TM",
@@ -33,20 +40,31 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-    window.login = function(){
-      const email = document.getElementById("email").value;
-      const pass = document.getElementById("password").value;
+    const ADMIN_EMAIL = "drnelsb@gmail.com"; // 👈 ONLY THIS EMAIL IS ALLOWED
 
-      signInWithEmailAndPassword(auth, email, pass)
-        .then(() => {
-          document.getElementById("msg").textContent = "✅ Login success!";
-          document.getElementById("adminPanel").style.display = "block";
-        })
-        .catch(err => {
-          document.getElementById("msg").textContent = "❌ " + err.message;
-        });
-    }
-  </script>
-</body>
-</html>
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const msg = document.getElementById("msg");
+    const adminPanel = document.getElementById("adminPanel");
+
+    loginBtn.onclick = () => {
+      signInWithPopup(auth, provider).catch(err => {
+        msg.textContent = "❌ Login failed: " + err.message;
+      });
+    };
+
+    logoutBtn.onclick = () => {
+      signOut(auth);
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (user.email === ADMIN_EMAIL) {
+          msg.textContent = "✅ Welcome, Admin!";
+          adminPanel.style.display = "block";
+          loginBtn.style.display = "none";
+          logoutBtn.style.display = "inline-block";
+        } else {
+          msg.textContent = "❌ Not authorized. This page is
