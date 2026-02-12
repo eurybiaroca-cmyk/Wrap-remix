@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Wrap Remix Admin</title>
+</head>
+<body>
+  <h2>🔒 Admin Login</h2>
+
+  <input id="email" placeholder="Admin Email"><br><br>
+  <input id="password" type="password" placeholder="Password"><br><br>
+  <button onclick="login()">Login</button>
+
+  <p id="msg"></p>
+
+  <div id="adminPanel" style="display:none;">
+    <h3>📦 Orders Panel</h3>
+    <p>Welcome, admin! (Orders will appear here later)</p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBu_pA3COAms7S3sjOJnpZC943SL2iu0TM",
+      authDomain: "wrap-remix.firebaseapp.com",
+      projectId: "wrap-remix",
+      storageBucket: "wrap-remix.firebasestorage.app",
+      messagingSenderId: "721069428975",
+      appId: "1:721069428975:web:1c6b614d7bbc3e2cadcb1a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.login = function(){
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, email, pass)
+        .then(() => {
+          document.getElementById("msg").textContent = "✅ Login success!";
+          document.getElementById("adminPanel").style.display = "block";
+        })
+        .catch(err => {
+          document.getElementById("msg").textContent = "❌ " + err.message;
+        });
+    }
+  </script>
+</body>
+</html>
