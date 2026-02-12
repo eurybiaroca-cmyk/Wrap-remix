@@ -8,15 +8,14 @@
 body { margin:0; font-family: Arial, sans-serif; background:#f2f2f2; }
 header { background:#b30000; color:white; padding:20px; text-align:center; }
 .container { max-width:900px; margin:20px auto; padding:15px; }
-.box { background:white; padding:20px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-bottom:15px; }
+.box { background:white; padding:20px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
 .hidden { display:none; }
 label { display:block; margin-top:10px; font-weight:bold; }
 input { width:100%; padding:8px; margin-top:5px; }
-button { margin-top:10px; padding:10px 15px; background:#b30000; color:white; border:none; border-radius:5px; cursor:pointer; }
+button { margin-top:15px; padding:10px 15px; background:#b30000; color:white; border:none; border-radius:5px; cursor:pointer; }
 .menu { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-top:10px; }
 .card { background:#eee; padding:10px; border-radius:6px; }
 .total { font-weight:bold; margin-top:10px; }
-h3 { margin-top:20px; }
 </style>
 </head>
 <body>
@@ -27,6 +26,7 @@ h3 { margin-top:20px; }
 
 <div class="container">
 
+<!-- INFO PAGE -->
 <div class="box" id="infoPage">
   <h2>Customer Information</h2>
   <label>Name</label><input id="nameInput">
@@ -36,11 +36,11 @@ h3 { margin-top:20px; }
   <button id="continueBtn">Continue to Order</button>
 </div>
 
+<!-- MENU PAGE -->
 <div class="box hidden" id="menuPage">
   <h2>Menu</h2>
   <p id="welcomeText"></p>
 
-  <h3>🍽️ Single Remix Meals</h3>
   <div class="menu">
     <div class="card"><b>Pastil Chick Remix</b><br>₱50<br><button onclick="addItem('Pastil Chick Remix',50)">Add</button></div>
     <div class="card"><b>Pastil Mush Remix</b><br>₱45<br><button onclick="addItem('Pastil Mush Remix',45)">Add</button></div>
@@ -50,27 +50,6 @@ h3 { margin-top:20px; }
     <div class="card"><b>Cheese Patty Remix</b><br>₱50<br><button onclick="addItem('Cheese Patty Remix',50)">Add</button></div>
   </div>
 
-  <h3>👨‍👩‍👧 Barkada Remix Meal</h3>
-  <div class="menu">
-    <div class="card"><b>Dual Remix</b><br>Choose 2 (₱5 off each)<br><button onclick="addDual()">Add Dual</button></div>
-    <div class="card"><b>Triple Remix</b><br>Choose 3 (₱5 off each)<br><button onclick="addTriple()">Add Triple</button></div>
-  </div>
-
-  <h3>🍰 Dessert Remix</h3>
-  <div class="menu">
-    <div class="card"><b>Banana Wrap</b><br>₱60<br><button onclick="addItem('Banana Wrap',60)">Add</button></div>
-    <div class="card"><b>Oreo Wrap</b><br>₱60<br><button onclick="addItem('Oreo Wrap',60)">Add</button></div>
-    <div class="card"><b>Mango Wrap</b><br>₱55<br><button onclick="addItem('Mango Wrap',55)">Add</button></div>
-  </div>
-
-  <h3>🎉 Party Remix</h3>
-  <div class="menu">
-    <div class="card"><b>Lumpia Party Remix</b><br>10pcs - ₱150<br><button onclick="addItem('Lumpia Party Remix (10pcs)',150)">Add</button></div>
-    <div class="card"><b>Dumplings Party Remix</b><br>15pcs - ₱150<br><button onclick="addItem('Dumplings Party Remix (15pcs)',150)">Add</button></div>
-    <div class="card"><b>Siomai Party Remix</b><br>15pcs - ₱150<br><button onclick="addItem('Siomai Party Remix (15pcs)',150)">Add</button></div>
-    <div class="card"><b>Party Bowl Remix</b><br>Up to 20 pcs<br><button onclick="addPartyBowl()">Customize</button></div>
-  </div>
-
   <h3>Your Order</h3>
   <ul id="orderList"></ul>
   <div class="total" id="totalText">Total: ₱0</div>
@@ -78,6 +57,7 @@ h3 { margin-top:20px; }
   <button onclick="goToPayment()">Confirm Order</button>
 </div>
 
+<!-- PAYMENT PAGE -->
 <div class="box hidden" id="paymentPage">
   <h2>Payment Method</h2>
   <label><input type="radio" name="pay" value="Cash on Delivery"> Cash on Delivery</label>
@@ -85,6 +65,7 @@ h3 { margin-top:20px; }
   <button onclick="confirmPayment()">Proceed to Receipt</button>
 </div>
 
+<!-- RECEIPT PAGE -->
 <div class="box hidden" id="receiptPage">
   <h2>Receipt</h2>
   <p><b>Order No:</b> <span id="orderNoText"></span></p>
@@ -98,6 +79,7 @@ h3 { margin-top:20px; }
   <button onclick="goToPickup()">Proceed to Pickup</button>
 </div>
 
+<!-- PICKUP PAGE -->
 <div class="box hidden" id="pickupPage">
   <h2>Pickup Confirmation</h2>
   <input id="pickupInput" placeholder="Enter Order No">
@@ -112,114 +94,86 @@ let orders = [];
 let total = 0;
 let currentOrderNo = "";
 
-const singles = [
-  {name:"Pastil Chick Remix", price:50},
-  {name:"Pastil Mush Remix", price:45},
-  {name:"Pork Sisig Remix", price:50},
-  {name:"Tofu Sisig Remix", price:45},
-  {name:"Embutido Remix", price:45},
-  {name:"Cheese Patty Remix", price:50}
-];
-
+// CONTINUE BUTTON
 document.getElementById("continueBtn").addEventListener("click", function(){
-  const n = nameInput.value.trim();
-  const e = emailInput.value.trim();
-  const c = contactInput.value.trim();
-  const a = addressInput.value.trim();
-  if(!n || !e || !c || !a){ alert("Please fill in all fields."); return; }
-  welcomeText.textContent = "Welcome, " + n + "!";
-  infoPage.classList.add("hidden");
-  menuPage.classList.remove("hidden");
+  const n = document.getElementById("nameInput").value.trim();
+  const e = document.getElementById("emailInput").value.trim();
+  const c = document.getElementById("contactInput").value.trim();
+  const a = document.getElementById("addressInput").value.trim();
+
+  if(n==="" || e==="" || c==="" || a===""){
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  document.getElementById("welcomeText").textContent = "Welcome, " + n + "!";
+  document.getElementById("infoPage").classList.add("hidden");
+  document.getElementById("menuPage").classList.remove("hidden");
 });
 
 function addItem(name, price){
   orders.push({name, price});
   const li = document.createElement("li");
   li.textContent = name + " - ₱" + price;
-  orderList.appendChild(li);
+  document.getElementById("orderList").appendChild(li);
   total += price;
-  totalText.textContent = "Total: ₱" + total;
-}
-
-function chooseSingle(){
-  let msg = "Choose:\n";
-  singles.forEach((s,i)=> msg += (i+1)+". "+s.name+" (₱"+s.price+")\n");
-  let c = parseInt(prompt(msg));
-  if(c<1 || c>6 || isNaN(c)) return null;
-  return singles[c-1];
-}
-
-function addDual(){
-  for(let i=0;i<2;i++){
-    let s = chooseSingle();
-    if(!s) return;
-    addItem("Dual - " + s.name, s.price - 5);
-  }
-}
-
-function addTriple(){
-  for(let i=0;i<3;i++){
-    let s = chooseSingle();
-    if(!s) return;
-    addItem("Triple - " + s.name, s.price - 5);
-  }
-}
-
-function addPartyBowl(){
-  let l = parseInt(prompt("How many Lumpia? (1-10)")) || 0;
-  let s = parseInt(prompt("How many Siomai? (1-10)")) || 0;
-  let d = parseInt(prompt("How many Dumpling? (1-10)")) || 0;
-  let sum = l + s + d;
-  if(sum < 1 || sum > 20){ alert("Total must be 1 to 20."); return; }
-  let price = l*12 + s*8 + d*8;
-  addItem(`Party Bowl (${l} Lumpia, ${s} Siomai, ${d} Dumpling)`, price);
+  document.getElementById("totalText").textContent = "Total: ₱" + total;
 }
 
 function goToPayment(){
-  if(orders.length === 0){ alert("Please add at least one item."); return; }
-  menuPage.classList.add("hidden");
-  paymentPage.classList.remove("hidden");
+  if(orders.length === 0){
+    alert("Please add at least one item.");
+    return;
+  }
+  document.getElementById("menuPage").classList.add("hidden");
+  document.getElementById("paymentPage").classList.remove("hidden");
 }
 
 function confirmPayment(){
   const pay = document.querySelector('input[name="pay"]:checked');
-  if(!pay){ alert("Select a payment method."); return; }
+  if(!pay){
+    alert("Select a payment method.");
+    return;
+  }
+
   let last = localStorage.getItem("lastOrderNo");
-  let newNo = last ? parseInt(last)+1 : 1;
+  let newNo = last ? parseInt(last) + 1 : 1;
   localStorage.setItem("lastOrderNo", newNo);
   currentOrderNo = newNo.toString().padStart(4,"0");
 
-  orderNoText.textContent = currentOrderNo;
-  rName.textContent = nameInput.value;
-  rContact.textContent = contactInput.value;
-  rAddress.textContent = addressInput.value;
-  receiptPay.textContent = pay.value;
+  document.getElementById("orderNoText").textContent = currentOrderNo;
+  document.getElementById("rName").textContent = document.getElementById("nameInput").value;
+  document.getElementById("rContact").textContent = document.getElementById("contactInput").value;
+  document.getElementById("rAddress").textContent = document.getElementById("addressInput").value;
+  document.getElementById("receiptPay").textContent = pay.value;
 
-  receiptItems.innerHTML = "";
+  const list = document.getElementById("receiptItems");
+  list.innerHTML = "";
   orders.forEach(o=>{
     const li = document.createElement("li");
     li.textContent = o.name + " - ₱" + o.price;
-    receiptItems.appendChild(li);
+    list.appendChild(li);
   });
-  receiptTotal.textContent = "Total: ₱" + total;
+  document.getElementById("receiptTotal").textContent = "Total: ₱" + total;
 
-  paymentPage.classList.add("hidden");
-  receiptPage.classList.remove("hidden");
+  document.getElementById("paymentPage").classList.add("hidden");
+  document.getElementById("receiptPage").classList.remove("hidden");
 }
 
 function goToPickup(){
-  receiptPage.classList.add("hidden");
-  pickupPage.classList.remove("hidden");
+  document.getElementById("receiptPage").classList.add("hidden");
+  document.getElementById("pickupPage").classList.remove("hidden");
 }
 
 function confirmPickup(){
-  if(pickupInput.value.trim() === currentOrderNo){
-    pickupMsg.textContent = "✅ Order confirmed!";
+  const code = document.getElementById("pickupInput").value.trim();
+  if(code === currentOrderNo){
+    document.getElementById("pickupMsg").textContent = "✅ Order confirmed!";
   } else {
-    pickupMsg.textContent = "❌ Invalid order number.";
+    document.getElementById("pickupMsg").textContent = "❌ Invalid order number.";
   }
 }
 </script>
 
 </body>
-  </html>
+      </html>
