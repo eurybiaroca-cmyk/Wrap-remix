@@ -12,7 +12,7 @@ header { background:#b30000; color:white; padding:20px; text-align:center; }
 .hidden { display:none; }
 label { display:block; margin-top:10px; font-weight:bold; }
 input { width:100%; padding:8px; margin-top:5px; }
-button { margin-top:15px; padding:10px 15px; background:#b30000; color:white; border:none; border-radius:5px; }
+button { margin-top:15px; padding:10px 15px; background:#b30000; color:white; border:none; border-radius:5px; cursor:pointer; }
 .menu { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-top:10px; }
 .card { background:#eee; padding:10px; border-radius:6px; }
 .total { font-weight:bold; margin-top:10px; }
@@ -89,7 +89,7 @@ let orders = [];
 let total = 0;
 let currentOrderNo = "";
 
-// FIXED BUTTON HANDLER
+// Continue button
 document.getElementById("continueBtn").addEventListener("click", function(){
   const n = document.getElementById("nameInput").value.trim();
   const e = document.getElementById("emailInput").value.trim();
@@ -168,27 +168,6 @@ function confirmPickup(){
     document.getElementById("pickupMsg").textContent = "❌ Invalid order number.";
   }
 }
-<script type="module">
-  try {
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBu_pA3COAms7S3sjOJnpZC943SL2iu0TM",
-      authDomain: "wrap-remix.firebaseapp.com",
-      projectId: "wrap-remix",
-      storageBucket: "wrap-remix.firebasestorage.app",
-      messagingSenderId: "721069428975",
-      appId: "1:721069428975:web:1c6b614d7bbc3e2cadcb1a",
-      measurementId: "G-EV66E734XG"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    console.log("🔥 Firebase connected!");
-  } catch (e) {
-    console.warn("Firebase failed to load, site still works:", e);
-  }
 </script>
 
 </body>
