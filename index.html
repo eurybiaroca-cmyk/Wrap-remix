@@ -168,6 +168,25 @@ function confirmPickup(){
     document.getElementById("pickupMsg").textContent = "❌ Invalid order number.";
   }
 }
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBu_pA3COAms7S3sjOJnpZC943SL2iu0TM",
+    authDomain: "wrap-remix.firebaseapp.com",
+    projectId: "wrap-remix",
+    storageBucket: "wrap-remix.firebasestorage.app",
+    messagingSenderId: "721069428975",
+    appId: "1:721069428975:web:1c6b614d7bbc3e2cadcb1a",
+    measurementId: "G-EV66E734XG"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+
+  console.log("🔥 Firebase connected!");
+</script>
 </script>
 
 </body>
